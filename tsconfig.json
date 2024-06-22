@@ -10,6 +10,8 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "strictNullChecks": false, // Make sure this option is set to false
+    "strictPropertyInitialization": false, // Make sure this option is set to false
     "jsx": "preserve",
     "incremental": true,
     "plugins": [
