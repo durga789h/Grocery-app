@@ -1,34 +1,47 @@
 "use client"
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import GlobalApi from '@/app/_utils/GlobalApi';
 import moment from 'moment';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@/components/ui/collapsible";
 import MyOrderItem from './_components/MyOrderItem';
 
-
 function MyOrder() {
-  const jwt=sessionStorage.getItem("jwt");
-  const user = sessionStorage.getItem("user");
-  const parsedUser = user ? JSON.parse(user) : null;
-  const router=useRouter();
-  const[orderList,setOrderList]=useState([]);
-  useEffect(()=>{
-    if(!jwt){
-      router.replace("/")
-    };
-    getMyOrder()
-  },[])
-  
-  const getMyOrder=async()=>{
-    const orderList_=await GlobalApi.getMyOrder(parsedUser.id,jwt);
-    setOrderList(orderList_);
-    console.log(orderList_);
+  const [jwt, setJwt] = useState<string | null>(null);
+  const [parsedUser, setParsedUser] = useState<{ id: number } | null>(null);
+  const [orderList, setOrderList] = useState<any[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+    const jwtToken = sessionStorage.getItem("jwt");
+    const user = sessionStorage.getItem("user");
+    const parsedUser = user ? JSON.parse(user) : null;
+
+    if (!jwtToken) {
+      router.replace("/");
+    } else {
+      setJwt(jwtToken);
+      setParsedUser(parsedUser ? { id: Number(parsedUser.id) } : null);
+      if (parsedUser) {
+        getMyOrder(parsedUser.id, jwtToken);
+      }
+    }
   }
+  }, [router]);
+
+  const getMyOrder = async (userId: number, jwtToken: string) => {
+    try {
+      const orderList_ = await GlobalApi.getMyOrder(userId, jwtToken);
+      setOrderList(orderList_);
+    } catch (error) {
+      console.error("Failed to fetch orders:", error);
+    }
+  };
 
   return (
     <div>
@@ -47,8 +60,8 @@ function MyOrder() {
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <div className='border-t border-gray-200 p-4'>
-                  {item.orderItemList.map((order:any,i:number)=>(
-                    <MyOrderItem orderItem={order} key={i}/>
+                  {item.orderItemList.map((order: any, i: number) => (
+                    <MyOrderItem orderItem={order} key={i} />
                   ))}
                 </div>
               </CollapsibleContent>
@@ -56,10 +69,10 @@ function MyOrder() {
           ))}
         </div>
         <button className='bg-gradient-to-br from-fuchsia-800 cursor-pointer text-white to-pink-600 p-3 rounded-full w-full'
-        onClick={()=>router.push("/")}> Go to Home</button>
+          onClick={() => router.push("/")}> Go to Home</button>
       </div>
     </div>
-  )
+  );
 }
 
 export default MyOrder;

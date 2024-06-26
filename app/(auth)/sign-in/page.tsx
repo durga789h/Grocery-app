@@ -50,6 +50,7 @@ function SignIn() {
     useEffect(()=>{
         const jwt=sessionStorage.getItem('jwt');
         if(jwt){
+            
             router.push("/")
         }
     },[])

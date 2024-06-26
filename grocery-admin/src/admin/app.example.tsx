@@ -1,3 +1,9 @@
+interface App {
+  // Define the properties and methods of the app object here
+  // For now, we are using 'any' to suppress the error.
+  [key: string]: any;
+}
+
 export default {
   config: {
     locales: [
@@ -29,7 +35,7 @@ export default {
       // 'zh',
     ],
   },
-  bootstrap(app) {
+  bootstrap(app: App) {
     console.log(app);
   },
 };
