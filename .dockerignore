@@ -1,0 +1,7 @@
+#for grocery-store frontend
+node_modules
+.env
+.env.local
+.env.production
+.next
+next-env.d.ts

@@ -1,0 +1,29 @@
+version: '3'
+services:
+  nextjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production   
+    volumes:
+      - ./:/app
+    env_file:
+      - .env.local  # Specify your .env.local file here
+    command: sh -c "npm install && npm run start"
+
+  strapi-admin:
+    build:
+      context: ./grocery-admin
+      dockerfile: Dockerfile
+    ports:
+      - "1337:1337"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - ./grocery-admin:/admin
+    env_file:
+      - ./grocery-admin/.env
+    command: sh -c "npm install && npm run start"

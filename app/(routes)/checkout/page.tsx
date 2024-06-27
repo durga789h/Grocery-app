@@ -104,7 +104,7 @@ const Checkout = () => {
 
   const createOrderId = async () => {
     try {
-      const response = await fetch('/api/order', {
+      const response = await fetch('http://localhost:3000/api/order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
